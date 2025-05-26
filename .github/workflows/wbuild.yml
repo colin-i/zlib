@@ -1,0 +1,22 @@
+on:
+ workflow_dispatch:
+
+jobs:
+ abuild:
+  runs-on: ubuntu-latest
+  container: fedora
+  steps:
+   - uses: actions/checkout@v4
+   - name: Run a multi-line script
+     run: |
+      mkdir build
+      cd build
+      dnf install -y mingw64-gcc cmake mingw64-cmake
+      mingw64-cmake ..
+      make
+   - name: Release
+     uses: softprops/action-gh-release@v2
+     with:
+      tag_name: v1.3.1
+      token: ${{ secrets.PAT }}
+      files: ./build/libzlib1.dll
